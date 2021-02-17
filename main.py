@@ -1,4 +1,4 @@
-import numpy as np
+iimport numpy as np
 import matplotlib.pyplot as plt
 import sympy as sym
 
@@ -28,11 +28,11 @@ def fun_rolling(t, y):
     return y[1], -5 / 7 * g * theta
 
 
-def get_state(distance_x, velocity_x,distance_y,velocity_y, distance_phi, velocity_phi):
+def get_state(distance_x, velocity_x,distance_y,velocity_y, distance_phi, velocity_phi,r):
     """
     Function used to determine motion state of the object.
     """
-    if velocity_x==0:
+    if velocity_x == 0 and distance_y == r:
         state = "not_moving"
     elif distance_y > r or velocity_y > 0:
         state = "projectile_motion"
@@ -43,7 +43,7 @@ def get_state(distance_x, velocity_x,distance_y,velocity_y, distance_phi, veloci
     elif velocity_y == 0 and distance_y == r and velocity_x - velocity_phi * r < 0.001 and velocity_x > 0:
         state = "rolling"
     else:
-        state="not_moving"
+        print('Error at determinating motion state!')
 
     return state
 
@@ -52,150 +52,128 @@ def get_state(distance_x, velocity_x,distance_y,velocity_y, distance_phi, veloci
 
 
 def time_solution(distance_x, distance_y, distance_phi, velocity_x, velocity_y, velocity_phi,r):
-    abc = []
-    stevec=-1
-    state=get_state(distance_x, velocity_x, distance_y, velocity_y, distance_phi, velocity_phi)
-    #print(state)
-
+    values_array = []
+    int = -1
+    state=get_state(distance_x, velocity_x, distance_y, velocity_y, distance_phi, velocity_phi,r)
+    
     for i in range(len(time_array) - 1):
-        #print(i)
-        #print(stevec)
-        #print(abc)
         if i!=0:
-            state = get_state(abc[stevec][0],abc[stevec][1],abc[stevec][2],abc[stevec][3],abc[stevec][4],abc[stevec][5])
-            #print(state)
-
-
+            state = get_state(values_array[int][0],values_array[int][1],values_array[int][2],values_array[int][3],values_array[int][4],values_array[int][5],r)
         if state == 'projectile_motion':
-            #print(abc)
-
             if i==0:
                 y_0 = np.array([distance_x, velocity_x, distance_y, velocity_y])
             else:
-                y_0 = np.array([abc[stevec][0], abc[stevec][1], abc[stevec][2], abc[stevec][3]])
+                y_0 = np.array([values_array[int][0], values_array[int][1], values_array[int][2], values_array[int][3]])
             solution = solve_ivp(fun_projectile_motion, (time_array[i], time_array[i + 1]), y_0)
             distance_x = solution.y[0][-1]
             velocity_x = solution.y[1][-1]
             distance_y = solution.y[2][-1]
             velocity_y = solution.y[3][-1]
-            #distance velocity  NAJPREJ X POL Y,,,,,KOT, KOTNA HITROST
-            a=[distance_x,velocity_x,distance_y,velocity_y,0,0]
-            abc.append(a)
-            stevec+=1
-
-
+            current_values=[distance_x,velocity_x,distance_y,velocity_y,0,0]
+            values_array.append(current_values)
+            int += 1
 
         elif state == 'collision':
-
-            prejsni_velocity_y = abc[stevec][3]
-            if abs(prejsni_velocity_y * epsilon) >= 0.1:
-                prejsni_velocity_x = abc[stevec][1]
-                prejsni_distance_x = abc[stevec][0]
-                velocity_y = prejsni_velocity_y * epsilon * (-1)
+            previous_velocity_y = values_array[int][3]
+            if abs(previous_velocity_y * epsilon) >= 0.1:
+                previous_velocity_x = values_array[int][1]
+                previous_distance_x = values_array[int][0]
+                velocity_y = previous_velocity_y * epsilon * (-1)
                 distance_y = r
-                a = [prejsni_distance_x, prejsni_velocity_x, distance_y, velocity_y, 0, 0]
-                abc.append(a)
-                stevec += 1
-            elif abs(prejsni_velocity_y * epsilon) < 0.1:
+                current_values = [previous_distance_x, previous_velocity_x, distance_y, velocity_y, 0, 0]
+                values_array.append(current_values)
+                int += 1
+            elif abs(previous_velocity_y * epsilon) < 0.1:
+                print(f'Time elapsed after last collision is{i*a/b: .2f} s.')
+                print(f'Distance x after last collision is{previous_distance_x: .2f} m.')
                 velocity_y = 0
                 distance_y = r
-                a = [prejsni_distance_x, prejsni_velocity_x, distance_y, velocity_y, 0, 0]
-                abc.append(a)
-                stevec += 1
+                current_values = [previous_distance_x, previous_velocity_x, distance_y, velocity_y, 0, 0]
+                values_array.append(current_values)
+                int += 1
             else:
                 print('An Error has occured, regarding collision')
-            #print(a)
-            #break;
         elif state == 'sliding':
             if i!=0:
-                prejsni_distance_phi = abc[stevec][4]
-                prejsni_distance_x = abc[stevec][0]
-                prejsni_velocity_x = abc[stevec][1]
-                prejsni_velocity_phi = abc[stevec][5]
+                previous_distance_phi = values_array[int][4]
+                previous_distance_x = values_array[int][0]
+                previous_velocity_x = values_array[int][1]
+                previous_velocity_phi = values_array[int][5]
             else:
-                prejsni_distance_phi = distance_phi
-                prejsni_distance_x = distance_x
-                prejsni_velocity_x = velocity_x
-                prejsni_velocity_phi = velocity_phi
-            if prejsni_velocity_x - prejsni_velocity_phi * r < 0.01:
-
-                velocity_phi = prejsni_velocity_x / r
-                ###################################
-                a = [prejsni_distance_x, prejsni_velocity_x, r, 0, prejsni_distance_phi, velocity_phi]
-                abc.append(a)
-                stevec += 1
+                previous_distance_phi = distance_phi
+                previous_distance_x = distance_x
+                previous_velocity_x = velocity_x
+                previous_velocity_phi = velocity_phi
+            if previous_velocity_x - previous_velocity_phi * r < 0.01:
+                print(f'Time elapsed after sliding is{i*a/b: .2f} s.')
+                print(f'Distance x after sliding is{previous_distance_x: .2f} m.')
+                velocity_phi = previous_velocity_x / r
+                current_values = [previous_distance_x, previous_velocity_x, r, 0, previous_distance_phi, velocity_phi]
+                values_array.append(current_values)
+                int += 1
 
             else:
                 if i!=0:
-                    prejsni_distance_phi = abc[stevec][4]
-                    prejsni_distance_x = abc[stevec][0]
-                    prejsni_velocity_x = abc[stevec][1]
-                    prejsni_velocity_phi = abc[stevec][5]
+                    previous_distance_phi = values_array[int][4]
+                    previous_distance_x = values_array[int][0]
+                    previous_velocity_x = values_array[int][1]
+                    previous_velocity_phi = values_array[int][5]
                 else:
-                    prejsni_distance_phi = distance_phi
-                    prejsni_distance_x = distance_x
-                    prejsni_velocity_x = velocity_x
-                    prejsni_velocity_phi = velocity_phi
-                y_0 = np.array([prejsni_distance_x, prejsni_velocity_x, prejsni_distance_phi, prejsni_velocity_phi])
+                    previous_distance_phi = distance_phi
+                    previous_distance_x = distance_x
+                    previous_velocity_x = velocity_x
+                    previous_velocity_phi = velocity_phi
+                y_0 = np.array([previous_distance_x, previous_velocity_x, previous_distance_phi, previous_velocity_phi])
                 solution = solve_ivp(fun_slipping_rolling, (time_array[i], time_array[i + 1]), y_0)
                 distance_x = solution.y[0][-1]
                 velocity_x = solution.y[1][-1]
                 distance_phi = solution.y[2][-1]
                 velocity_phi = solution.y[3][-1]
-                a = [distance_x, velocity_x,r,0, distance_phi, velocity_phi]
-                abc.append(a)
-                stevec+=1
+                current_values = [distance_x, velocity_x,r,0, distance_phi, velocity_phi]
+                values_array.append(current_values)
+                int+=1
         elif state == 'rolling':
-            prejsni_velocity_x = abc[stevec][1]
-            if prejsni_velocity_x < 0.01:
+            previous_velocity_x = values_array[int][1]
+            if previous_velocity_x < 0.01:
 
-                q = abc[stevec][0]
+                q = values_array[int][0]
                 q2 = 0
-                q3 = abc[stevec][2]
-                q4 = abc[stevec][3]
-                q5 = abc[stevec][4]
-                q6 = abc[stevec][5]
-                a = [q, q2, q3, q4, q5, q6]
-                abc.append(a)
-                stevec+=1
-                print(((i)*20)/10000)
+                q3 = values_array[int][2]
+                q4 = values_array[int][3]
+                q5 = values_array[int][4]
+                q6 = values_array[int][5]
+                current_values = [q, q2, q3, q4, q5, q6]
+                values_array.append(current_values)
+                int+=1
+                print(f'Time elapsed after rolling is{i*a/b: .2f} s.')
+                print(f'Distance x after rolling is{previous_distance_x: .2f} m.')
+
             else:
-                prejsni_distance_x = abc[stevec][0]
-                prejsni_velocity_x = abc[stevec][1]
-                y_0 = np.array([prejsni_distance_x, prejsni_velocity_x])
+                previous_distance_x = values_array[int][0]
+                previous_velocity_x = values_array[int][1]
+                y_0 = np.array([previous_distance_x, previous_velocity_x])
                 solution = solve_ivp(fun_rolling, (time_array[i], time_array[i + 1]), y_0)
                 distance_x = solution.y[0][-1]
                 velocity_x = solution.y[1][-1]
-                velocity_phi = prejsni_velocity_x / r
-                a = [distance_x, velocity_x,r,0,0,velocity_phi]
-                abc.append(a)
-                stevec+=1
-        elif state == 'not_moving':
+                velocity_phi = previous_velocity_x / r
+                current_values = [distance_x, velocity_x,r,0,0,velocity_phi]
+                values_array.append(current_values)
+                int+=1
 
-            #velocity_x = 0
-            #velocity_phi = 0
-            q = abc[stevec][0]
-            q2 = abc[stevec][1]
-            q3 = abc[stevec][2]
-            q4 = abc[stevec][3]
-            q5 = abc[stevec][4]
-            q6 = abc[stevec][5]
-            a = [q, q2, q3, q4, q5, q6]
-            abc.append(a)
-            stevec+=1
+        elif state == 'not_moving':
+            q = values_array[int][0]
+            q2 = values_array[int][1]
+            q3 = values_array[int][2]
+            q4 = values_array[int][3]
+            q5 = values_array[int][4]
+            q6 = values_array[int][5]
+            current_values = [q, q2, q3, q4, q5, q6]
+            values_array.append(current_values)
+            int+=1
         else:
             print('Error')
 
-        """
-        distance_x_array = np.append(distance_x_array, distance_x)
-        velocity_x_array = np.append(velocity_x_array, velocity_x)
-        distance_y_array = np.append(distance_y_array, distance_y)
-        velocity_y_array = np.append(velocity_y_array, velocity_y)
-        distance_phi_array = np.append(distance_phi_array, distance_phi)
-        velocity_phi_array = np.append(velocity_phi_array, velocity_phi)
-        """
-
-    return abc
+    return values_array
 
 
 
@@ -210,7 +188,9 @@ if __name__ == '__main__':
     mi = 0.1
     f = 0.08
     theta = f / r
-    time_array = np.linspace(0, 20, 10000)
+    a=20
+    b=10000
+    time_array = np.linspace(0, a, b)
     t = time_array
     distance_x = 0
     distance_y = H
@@ -221,24 +201,31 @@ if __name__ == '__main__':
     rez=time_solution(distance_x, distance_y, distance_phi, velocity_x, velocity_y, velocity_phi,r)
     distance_x_array=[0]
     velocity_x_array = [velocity_x]
-    distance_y_array = [0]
+    distance_y_array = [H]
     velocity_y_array = [velocity_y]
-    #print(rez)
+    velocity_phi_array = [0]
     for i in range(len(rez)):
         distance_x_array.append(rez[i][0])
         velocity_x_array.append(rez[i][1])
         distance_y_array.append(rez[i][2])
         velocity_y_array.append(rez[i][3])
-    print(len(distance_x_array))
-    plt.plot(time_array, velocity_x_array)
+        velocity_phi_array.append(rez[5])
+    plt.plot(time_array, velocity_x_array, label='Velocity_x')
     plt.show()
-    #plt.plot(time_array, distance_x_array)
+    #plt.plot(time_array, distance_x_array, label='Distance_x')
     #plt.show()
-    plt.plot(time_array, velocity_y_array)
+    plt.plot(time_array, velocity_y_array, label='Velocity_y')
     plt.show()
-    plt.plot(time_array, distance_y_array)
+    plt.plot(time_array, distance_y_array, label='Distance_y')
     plt.show()
-    #plt.plot(distance_x_array, distance_y_array)
+    #plt.plot(distance_x_array, distance_y_array,, label='Center of mass location')
     #plt.show()
+    #plt.plot(time_array, velocity_phi_array, label='Vlocity_phi')
+    #plt.show()
+    plt.legend();
+    plt.xlabel('t[s]');
+    plt.ylabel('vx,vy[m/s], y[m]');
+    plt.title('Ball movement');
+
 
 
