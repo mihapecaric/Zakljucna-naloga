@@ -5,6 +5,7 @@ Created on Mon Feb  8 17:28:12 2021
 @author: mihap
 """
 
+
 import numpy as np
 import matplotlib.pyplot as plt
 import sympy as sym
@@ -19,7 +20,7 @@ alpha_0=30*np.pi/180
 r=0.15
 epsilon=0.2
 mi=0.1
-f=0.08
+f = 0.08
 theta=f/r
 
 def fun_1(t, y):
@@ -195,3 +196,5 @@ plt.grid()
 plt.legend();
 plt.xlabel('t[s]');
 plt.ylabel('x[m]');
+
+# %%

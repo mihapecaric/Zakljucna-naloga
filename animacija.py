@@ -238,10 +238,15 @@ if __name__ == '__main__':
     ax = plt.axes(xlim=(-1.5,distance_x_array[-1]+10),
                   ylim=(0,17))
 
-    lines = plt.plot([], "o")
-    line = lines[0]
-    #ball = plt.Circle((30,5), r*10, fc='y', fill=False)
-   # ax.add_patch(ball)
+    #lines = plt.plot([], "o")
+    #line = lines[0]
+    #line2 = lines[0]
+    
+    line, = ax.plot([], [], 'o', lw=2, color='b')
+    line2, = ax.plot([], [], '.', lw=2, color='r')
+    
+    ball = plt.Circle((30,5), r*10, fc='y', fill=False)
+    ax.add_patch(ball)
     title = ax.text(0.5,0.85, "", bbox={'facecolor':'w', 'alpha':0.5, 'pad':5},
                 transform=ax.transAxes, ha="center")
 
@@ -269,17 +274,19 @@ if __name__ == '__main__':
         #update plot
         x_out = distance_x_array[frame]
         y_out = distance_y_array[frame]
+        y_out2 = distance_y_array[frame]+1
         vx_out = velocity_x_array[frame]
         vy_out = velocity_y_array[frame]
         vphi_out = velocity_phi_array[frame]
         line.set_data((x_out, y_out))
-        #ball.center= ((x_out, y_out))
+        line2.set_data((x_out, y_out2))
+        ball.center= ((x_out, y_out))
         
         time_text.set_text(time_template%(frame*a/b))
         velocity_text1.set_text(velocity_template1%(vx_out))
         velocity_text2.set_text(velocity_template2%(vy_out))
         velocity_text3.set_text(velocity_template3%(vphi_out))
-        return line, velocity_text1 
+        return line, velocity_text1, line2, ball
 
 
     
