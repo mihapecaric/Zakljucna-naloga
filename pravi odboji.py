@@ -304,13 +304,11 @@ class Balls:
                             st_ball=j
                         elif a1==druga.get_ID():
                             nd_ball=j
-                    x1=st_ball.get_distance_x()
-                    y1=st_ball.get_distance_y()
+
                     m1=st_ball.get_mass()
                     v1x = st_ball.get_velocity_x()
                     v1y = st_ball.get_velocity_y()
-                    x2 = nd_ball.get_distance_x()
-                    y2 = nd_ball.get_distance_y()
+
                     m2 = nd_ball.get_mass()
                     v2x = nd_ball.get_velocity_x()
                     v2y = nd_ball.get_velocity_y()
@@ -320,9 +318,14 @@ class Balls:
                     print(f'v2x = {v2x}')
                     print(f'v2y = {v2y}')
 
-                    dx = x2 - x1 #distance between balls
-                    dy = y2 - y1
+                    dx = nd_ball.get_distance_x() - st_ball.get_distance_x() #distance between balls
+                    dy = nd_ball.get_distance_y() - st_ball.get_distance_y()
                     angle = np.arctan2(dy,dx) #angle between vertical line and line that goes through both centers
+                    """Relative distance to centre of 1st ball:"""
+                    x1 = 0
+                    y1 = 0
+                    x2 = dx * np.cos(angle) + dy * np.sin(angle)
+                    y2 = dy * np.cos(angle) - dx * np.sin(angle)
                     """rotating velocity:"""
                     vx1 = v1x * np.cos(angle) + v1y * np.sin(angle)
                     vy1 = v1y * np.cos(angle) - v1x * np.sin(angle)
@@ -334,15 +337,34 @@ class Balls:
                     print(f'vx2 = {vx2}')
                     print(f'vy2 = {vy2}')
                     """resolve 1-D velocity and use temporary variables:"""
-                    vx1final = ((m1 - m2) * vx1 + 2 * m2*vx2) / (m1 + m2)
-                    vx2final = ((m2 - m1) * vx2 + 2 * m1*vx1) / (m1 + m2)
+                    #vx1final = ((m1 - m2) * vx1 + 2 * m2*vx2) / (m1 + m2)
+                    vx1final = vx1 - (vx1 - vx2) * (1 + epsilon_ball) * m2 / (m1 + m2)
+                    #vx2final = ((m2 - m1) * vx2 + 2 * m1*vx1) / (m1 + m2)
+                    vx2final = vx2 - (vx2 - vx1) * (1 + epsilon_ball) * m1 / (m1 + m2)
                     print(f'Izračunane vx final:')
                     print(f'vx1final = {vx1final}')
                     print(f'vx2final = {vx2final}')
 
+
                     """update velocity:"""
                     vx1 = vx1final
                     vx2 = vx2final
+                    """Fixing overlap:"""
+                    absV = abs(vx1) + abs(vx2)
+                    overlap = (st_ball.get_radius() + nd_ball.get_radius()) - abs(x1 - x2)
+                    x1 += vx1 / absV * overlap
+                    x2 += vx2 / absV * overlap
+                    """Rotate relative positions back:"""
+                    x1final = x1 * np.cos(angle) - y1 * np.sin(angle)
+                    y1final = y1 * np.cos(angle) + x1 * np.sin(angle)
+                    x2final = x2 * np.cos(angle) - y2 * np.sin(angle)
+                    y2final = y2 * np.cos(angle) + x2 * np.sin(angle)
+                    """Calculate new absolute positions:"""
+                    nd_ball.set_distance_x(st_ball.get_distance_x() + x2final)
+                    nd_ball.set_distance_y(st_ball.get_distance_y() + y2final)
+
+                    st_ball.set_distance_x(st_ball.get_distance_x() + x1final)
+                    st_ball.set_distance_y(st_ball.get_distance_y() + y1final)
                     """rotate velocities back:"""
                     v1xr = vx1 * np.cos(angle) - vy1 * np.sin(angle)
                     v1yr = vy1 * np.cos(angle) + vx1 * np.sin(angle)
@@ -356,10 +378,10 @@ class Balls:
                     print(f'v2yr = {v2yr}')
 
 
-                    st_ball.coll_x=x1
+                    """st_ball.coll_x=x1
                     st_ball.coll_y=y1
                     nd_ball.coll_x=x2
-                    nd_ball.coll_y=y2
+                    nd_ball.coll_y=y2"""
                     st_ball.set_velocity_x(v1xr)
                     st_ball.set_velocity_y(v1yr)
                     nd_ball.set_velocity_x(v2xr)
@@ -595,6 +617,7 @@ if __name__ == '__main__':
     v_phi0 = 0
     radius = 0.1
     epsilon = 0.5
+    epsilon_ball = 1
     mi = 0.3
     f = 0.2
     theta = f / radius
@@ -609,48 +632,24 @@ if __name__ == '__main__':
     b4 = Ball(4, 50, v_0 * np.cos(alpha_4), H , v_0 * np.sin(alpha_4), 0, 0, radius, 1, [])
     b5 = Ball(5, 0, v_0 * np.cos(alpha_5), H , v_0 * np.sin(alpha_5), 0, 0, radius, 1, [])
     b6 = Ball(6, 0, v_0 * np.cos(alpha_5), 2*H, v_0 * np.sin(alpha_5), 0, 0, radius, 1, [])
-    b7 = Ball(7 ,35, 0, radius,0, 0, 0, radius, 1, [])
+    b7 = Ball(7 ,30, 0, radius,0, 0, 0, radius, 1, [])
     b8 = Ball(8, 0, v_0 * np.cos(alpha_0), H , v_0 * np.sin(alpha_0), 0, 0, radius, 1, [])
     b9 = Ball(9, 15, v_0 * np.cos(alpha_4), H-0.13 , v_0 * np.sin(alpha_4), 0, 0, radius, 1, [])
 
 
     #Zogemaroge = Balls([b1,b2,b3], time_array)  #####ADDING BALLS TO NEW CLASS
-    #Zogemaroge = Balls([b8, b9], time_array)
-    #Zogemaroge = Balls([b1, b7], time_array)  #####ADDING BALLS TO NEW CLASS
+    Zogemaroge = Balls([b8, b9], time_array)
+    #Zogemaroge = Balls([b1, b7], time_array)  #####ADDING BALLS TO NEW CLASS ena žoga je pri meru
     #Zogemaroge = Balls([b1], time_array)  #####ADDING BALLS TO NEW CLASS
     #Zogemaroge = Balls([], time_array)  #####ADDING BALLS TO NEW CLASS
-    Zogemaroge = Balls([b5, b6], time_array)  #####ADDING BALLS TO NEW CLASS
+    #Zogemaroge = Balls([b5, b6], time_array)  #####ADDING BALLS TO NEW CLASS NAVPIČNO
     Zogemaroge.time_solution(a,b)  #####FILING TABLE OF ALL BALLS WITH 6 VARIABLES
     tok = time.time()
     computing_time = tok - tic
     print(f'Computing time = {computing_time: .2f}s.')
 
-    #Zogemaroge.draw()  #####GAPHS DISPLAY
-
     Zogemaroge.animate()  #####ANIMATION DISPLAY
-    #b1.print_list()
-    """vrednosti1 = b1.get_list()
-    vrednosti2 = b2.get_list()
-    #print(f'Vrednosti = {vrednosti}')
-    #print(f'Tip vrednosti: {type(vrednosti)}')
-    dfObj1 = pd.DataFrame(vrednosti1, columns = ['Distance x' , 'Velocity x', 'Distance y', 'Velocity y', 'Distance phi', 'Velocity phi'])
-    dfObj2 = pd.DataFrame(vrednosti2, columns = ['Distance x' , 'Velocity x', 'Distance y', 'Velocity y', 'Distance phi', 'Velocity phi'])
-    print(dfObj1,dfObj2)
-    maxValuesObj1 = dfObj1.max()
-    print(maxValuesObj1)
-    dfObj1_10th = dfObj1[dfObj1.index % 10 == 0]
-    #print(dfObj1_10th)
-    #print(dfObj1["Distance x"])
-    dfObj1.plot(x="Distance x", y="Distance y")
-    dfObj2.plot(x="Distance x", y="Distance y")
-    plt.show()
-    print(item[0] for item in b1.get_list()[1])
-    print(b1.get_list()[1])
-    print(b1.get_list()[1][0])
-    positions = []
-    for frame in range(1000):
-        positions.append([0, b1.get_list()[frame][0], b1.get_list()[frame][2]])
-    print(positions)"""
+
 
 
 
