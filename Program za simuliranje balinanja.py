@@ -171,7 +171,7 @@ class Balls:
                                 ball.velocity_after_sliding[0] = ball.velocity[0]
                                 ball.distance_after_sliding[0] = ball.distance[0]
 
-                                ball.distance_after_sliding[4] = ball.distance[4]#NA NOVO!!!!
+                                ball.distance_after_sliding[4] = ball.distance[4]
                                 ball.velocity_after_sliding[1] = ball.velocity[1]
                                 ball.distance_after_sliding[1] = ball.distance[1]
 
@@ -205,7 +205,7 @@ class Balls:
                         else:
                             if abs(ball.velocity[0]) - abs(ball.velocity[3]) * ball.radius < 0.1:
                                 ball.velocity[3] = ball.velocity[0] / ball.radius
-                                ball.velocity[4] = ball.velocity[1] / ball.radius  # NA NOVO!!!!
+                                ball.velocity[4] = ball.velocity[1] / ball.radius  
                                 current_values = [ball.distance[0], ball.velocity[0], ball.distance[1],
                                                   ball.velocity[1], ball.distance[2], ball.velocity[2],
                                                   ball.distance[3], ball.velocity[3], ball.distance[4], ball.velocity[4]]
@@ -217,7 +217,7 @@ class Balls:
                                 ball.velocity_after_sliding[0] = ball.velocity[0]
                                 ball.distance_after_sliding[0] = ball.distance[0]
 
-                                ball.distance_after_sliding[4] = ball.distance[4]  # NA NOVO!!!!
+                                ball.distance_after_sliding[4] = ball.distance[4]  
                                 ball.velocity_after_sliding[1] = ball.velocity[1]
                                 ball.distance_after_sliding[1] = ball.distance[1]
 
@@ -233,12 +233,12 @@ class Balls:
                                 ball.velocity[3] = solution.y[3][-1]
 
                                 if ball.velocity[1] == 0:
-                                    ball.distance[1] = a / b * ball.velocity[1] + ball.distance[1]  # NA NOVO!!!!
+                                    ball.distance[1] = a / b * ball.velocity[1] + ball.distance[1]  
                                     ball.velocity[1] = 0
                                     ball.distance[4] = a / b * ball.velocity[4] + ball.distance[4]
                                     ball.velocity[4] = 0
                                 else:
-                                    ball.distance[1] = a / b * ball.velocity[1] + ball.distance[1]  # NA NOVO!!!!
+                                    ball.distance[1] = a / b * ball.velocity[1] + ball.distance[1]  
                                     ball.velocity[1] = ball.velocity[0] / ratio
                                     ball.distance[4] = a / b * ball.velocity[4] + ball.distance[4]
                                     ball.velocity[4] = ball.velocity[3] / ratio
@@ -251,12 +251,11 @@ class Balls:
                     elif ball.get_motion_status() == 'rolling_x':
 
                         if i == 0:
-                            # ball.set_time_after_sliding(0)
                             ball.velocity_after_sliding[0] = ball.velocity[0]
                             ball.distance_after_sliding[0] = ball.distance[0]
                             ball.distance_after_sliding[3] = ball.distance[3]
 
-                            ball.velocity_after_sliding[1] = ball.velocity[1]#NA NOVO!!!!!
+                            ball.velocity_after_sliding[1] = ball.velocity[1]
                             ball.distance_after_sliding[1] = ball.distance[1]
                             ball.distance_after_sliding[4] = ball.distance[4]
 
@@ -266,7 +265,7 @@ class Balls:
                                 ball.velocity[0] = 0
                                 ball.velocity[3] = 0
 
-                                ball.velocity[1] = 0 #NA NOVO!!!!
+                                ball.velocity[1] = 0 
                                 ball.velocity[4] = 0
 
                                 current_values = [ball.distance[0], ball.velocity[0], ball.distance[1], ball.velocity[1],
@@ -274,7 +273,7 @@ class Balls:
                                                   ball.distance[4], ball.velocity[4]]
                                 ball.list.append(current_values)
                                 ball.distance_after_rolling[3] = ball.distance[3]
-                                ball.distance_after_rolling[4] = ball.distance[4]#NA NOVO!!!
+                                ball.distance_after_rolling[4] = ball.distance[4]
                                 ball.time_after_rolling_x = time_array[i]
 
 
@@ -287,12 +286,12 @@ class Balls:
                                 ball.distance[3] = ball.distance_after_sliding[3] + (
                                         ball.distance[0] - ball.distance_after_sliding[0]) / ball.radius
                                 if ball.velocity[1] == 0:
-                                    ball.distance[1] = a / b * ball.velocity[1] + ball.distance[1]  # NA NOVO!!!!
+                                    ball.distance[1] = a / b * ball.velocity[1] + ball.distance[1]  
                                     ball.velocity[1] = 0
                                     ball.distance[4] = a / b * ball.velocity[4] + ball.distance[4]
                                     ball.velocity[4] = 0
                                 else:
-                                    ball.distance[1] = a / b * ball.velocity[1] + ball.distance[1]  # NA NOVO!!!!
+                                    ball.distance[1] = a / b * ball.velocity[1] + ball.distance[1]  
                                     ball.velocity[1] = ball.velocity[0] / ratio
                                     ball.distance[4] = a / b * ball.velocity[4] + ball.distance[4]
                                     ball.velocity[4] = ball.velocity[3] / ratio
@@ -308,7 +307,7 @@ class Balls:
                                 ball.velocity[0] = 0
                                 ball.velocity[3] = 0
 
-                                ball.velocity[1] = 0# NA NOVO!!!!
+                                ball.velocity[1] = 0
                                 ball.velocity[4] = 0
 
                                 current_values = [ball.distance[0], ball.velocity[0], ball.distance[1], ball.velocity[1],
@@ -329,12 +328,12 @@ class Balls:
                                         ball.distance[0] - ball.distance_after_sliding[0]) / ball.radius
 
                                 if ball.velocity[1] == 0:
-                                    ball.distance[1] = a / b * ball.velocity[1] + ball.distance[1]  # NA NOVO!!!!
+                                    ball.distance[1] = a / b * ball.velocity[1] + ball.distance[1]  
                                     ball.velocity[1] = 0
                                     ball.distance[4] = a / b * ball.velocity[4] + ball.distance[4]
                                     ball.velocity[4] = 0
                                 else:
-                                    ball.distance[1] = a / b * ball.velocity[1] + ball.distance[1]  # NA NOVO!!!!
+                                    ball.distance[1] = a / b * ball.velocity[1] + ball.distance[1]  
                                     ball.velocity[1] = ball.velocity[0] / ratio
                                     ball.distance[4] = a / b * ball.velocity[4] + ball.distance[4]
                                     ball.velocity[4] = ball.velocity[3] / ratio
@@ -410,8 +409,6 @@ class Balls:
                         else:
                             print('An Error has occured, regarding collision')
                     elif ball.get_motion_status_y() == 'sliding_y':
-                        # if i == 0:
-                        # ball.set_time_after_collision(0)
                         if ball.velocity[1] > 0:
                             if abs(ball.velocity[1]) - abs(ball.velocity[4]) * ball.radius < 0.1:
                                 ball.velocity[4] = ball.velocity[1] / ball.radius
@@ -427,7 +424,7 @@ class Balls:
                                 ball.velocity_after_sliding[0] = ball.velocity[0]
                                 ball.distance_after_sliding[0] = ball.distance[0]
 
-                                ball.distance_after_sliding[4] = ball.distance[4]#NA NOVO!!!!
+                                ball.distance_after_sliding[4] = ball.distance[4]
                                 ball.velocity_after_sliding[1] = ball.velocity[1]
                                 ball.distance_after_sliding[1] = ball.distance[1]
 
@@ -442,7 +439,7 @@ class Balls:
                                 ball.distance[4] = solution.y[2][-1]
                                 ball.velocity[4] = solution.y[3][-1]
 
-                                ball.distance[0] = a / b * ball.velocity[0] + ball.distance[0]#NA NOVO!!!!
+                                ball.distance[0] = a / b * ball.velocity[0] + ball.distance[0]
                                 ball.velocity[0] = ball.velocity[1] / ratio
                                 ball.distance[3] = a / b * ball.velocity[3] + ball.distance[3]
                                 ball.velocity[3] = ball.velocity[4] / ratio
@@ -454,7 +451,7 @@ class Balls:
                         else:
                             if abs(ball.velocity[1]) - abs(ball.velocity[4]) * ball.radius < 0.1:
                                 ball.velocity[4] = ball.velocity[1] / ball.radius
-                                ball.velocity[3] = ball.velocity[0] / ball.radius  # NA NOVO!!!!
+                                ball.velocity[3] = ball.velocity[0] / ball.radius  
                                 current_values = [ball.distance[0], ball.velocity[0], ball.distance[1],
                                                   ball.velocity[1], ball.distance[2], ball.velocity[2],
                                                   ball.distance[3], ball.velocity[3], ball.distance[4], ball.velocity[4]]
@@ -466,7 +463,7 @@ class Balls:
                                 ball.velocity_after_sliding[0] = ball.velocity[0]
                                 ball.distance_after_sliding[0] = ball.distance[0]
 
-                                ball.distance_after_sliding[4] = ball.distance[4]  # NA NOVO!!!!
+                                ball.distance_after_sliding[4] = ball.distance[4] 
                                 ball.velocity_after_sliding[1] = ball.velocity[1]
                                 ball.distance_after_sliding[1] = ball.distance[1]
 
@@ -481,7 +478,7 @@ class Balls:
                                 ball.distance[4] = solution.y[2][-1]
                                 ball.velocity[4] = solution.y[3][-1]
 
-                                ball.distance[0] = a / b * ball.velocity[0] + ball.distance[0]  # NA NOVO!!!!
+                                ball.distance[0] = a / b * ball.velocity[0] + ball.distance[0]  
                                 ball.velocity[0] = ball.velocity[1] / ratio
                                 ball.distance[3] = a / b * ball.velocity[3] + ball.distance[3]
                                 ball.velocity[3] = ball.velocity[4] / ratio
@@ -494,12 +491,11 @@ class Balls:
                     elif ball.get_motion_status_y() == 'rolling_y':
 
                         if i == 0:
-                            # ball.set_time_after_sliding(0)
                             ball.velocity_after_sliding[0] = ball.velocity[0]
                             ball.distance_after_sliding[0] = ball.distance[0]
                             ball.distance_after_sliding[3] = ball.distance[3]
 
-                            ball.velocity_after_sliding[1] = ball.velocity[1]#NA NOVO!!!!!
+                            ball.velocity_after_sliding[1] = ball.velocity[1]
                             ball.distance_after_sliding[1] = ball.distance[1]
                             ball.distance_after_sliding[4] = ball.distance[4]
 
@@ -509,7 +505,7 @@ class Balls:
                                 ball.velocity[0] = 0
                                 ball.velocity[3] = 0
 
-                                ball.velocity[1] = 0 #NA NOVO!!!!
+                                ball.velocity[1] = 0 
                                 ball.velocity[4] = 0
 
                                 current_values = [ball.distance[0], ball.velocity[0], ball.distance[1], ball.velocity[1],
@@ -517,7 +513,7 @@ class Balls:
                                                   ball.distance[4], ball.velocity[4]]
                                 ball.list.append(current_values)
                                 ball.distance_after_rolling[3] = ball.distance[3]
-                                ball.distance_after_rolling[4] = ball.distance[4]#NA NOVO!!!
+                                ball.distance_after_rolling[4] = ball.distance[4]
                                 ball.time_after_rolling_x = time_array[i]
 
 
@@ -530,7 +526,7 @@ class Balls:
                                 ball.distance[4] = ball.distance_after_sliding[4] + (
                                         ball.distance[1] - ball.distance_after_sliding[1]) / ball.radius
 
-                                ball.distance[0] = a / b * ball.velocity[0] + ball.distance[0]  # NA NOVO!!!!
+                                ball.distance[0] = a / b * ball.velocity[0] + ball.distance[0]  
                                 ball.velocity[0] = ball.velocity[1] / ratio
                                 ball.distance[3] = a / b * ball.velocity[3] + ball.distance[3]
                                 ball.velocity[3] = ball.velocity[4] / ratio
@@ -545,7 +541,7 @@ class Balls:
                                 ball.velocity[0] = 0
                                 ball.velocity[3] = 0
 
-                                ball.velocity[1] = 0# NA NOVO!!!!
+                                ball.velocity[1] = 0
                                 ball.velocity[4] = 0
 
                                 current_values = [ball.distance[0], ball.velocity[0], ball.distance[1], ball.velocity[1],
@@ -565,7 +561,7 @@ class Balls:
                                 ball.distance[4] = ball.distance_after_sliding[4] + (
                                         ball.distance[1] - ball.distance_after_sliding[1]) / ball.radius
 
-                                ball.distance[0] = a / b * ball.velocity[0] + ball.distance[0]  # NA NOVO!!!!
+                                ball.distance[0] = a / b * ball.velocity[0] + ball.distance[0]  
                                 ball.velocity[0] = ball.velocity[1] / ratio
                                 ball.distance[3] = a / b * ball.velocity[3] + ball.distance[3]
                                 ball.velocity[3] = ball.velocity[4] / ratio
@@ -575,8 +571,6 @@ class Balls:
                                                   ball.distance[4], ball.velocity[4]]
                                 ball.list.append(current_values)
                     elif ball.get_motion_status() == 'not_moving':
-                        # print(f'i = {i}')
-                        # print(f'dolžina lista: {len(ball.list)}')
                         current_values = [ball.distance[0], ball.velocity[0], ball.distance[1], ball.velocity[1],
                                           ball.distance[2], ball.velocity[2], ball.distance[3], ball.velocity[3],
                                           ball.distance[4], ball.velocity[4]]
@@ -669,15 +663,6 @@ class Balls:
                     v1yr = v1y - (v1y - v2y) * (1 + epsilon_ball) * m2 / (m1 + m2)
                     v2yr = v2y - (v2y - v1y) * (1 + epsilon_ball) * m1 / (m1 + m2)
 
-                    """print(f'Kot je {angle / np.pi * 180}°')
-                    print(f'Po odboju:')
-                    print(f'v1xr = {v1xr}')
-                    print(f'v1yr = {v1yr}')
-                    print(f'v1zr = {v1zr}')
-                    print(f'v2xr = {v2xr}')
-                    print(f'v2yr = {v2yr}')
-                    print(f'v2zr = {v2zr}')"""
-
 
                     """Setting new values:"""
                     st_ball.velocity[0] = v1xr
@@ -686,7 +671,6 @@ class Balls:
                     nd_ball.velocity[0] = v2xr
                     nd_ball.velocity[1] = v2yr
                     nd_ball.velocity[2] = v2zr
-                    # do tu----------------------------
 
     def new_values(self):
         for ball in self.list:
@@ -923,8 +907,8 @@ class Ball:
         self.radius = radius
         self.mass = mass
         self.list = list
-        self.coll = 1  # gre lahko v kolizijo
-        self.num_colls = 0 # število trkov posamezne krogle
+        self.coll = 1  # can go into collision
+        self.num_colls = 0 # number of collisions 
         self.time_after_collision_x = 0
         self.time_after_sliding_x = 0
         self.time_after_rolling_x = 0
